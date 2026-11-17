@@ -1,6 +1,6 @@
 # weng.ae — link in bio
 
-v1.2.0
+v1.3.0
 
 Personal link page for weng.ae (Blender MMD Animator & AE Editor), hosted on GitHub Pages at https://weng-sama.github.io.
 
@@ -10,6 +10,7 @@ Personal link page for weng.ae (Blender MMD Animator & AE Editor), hosted on Git
 
 ## Changelog
 
+- v1.3.0 — Empty background (no shapes); stronger button feedback (squish, ripple, bounce, arrow, haptic); text animation (letter drop-in + wave, typewriter role, staged fade-ups); card tilt follows phone tilt angle (iPhone: one-tap enable).
 - v1.2.0 — 3D look: glossy floating orbs and ring with parallax, card tilt (mouse / phone gyroscope, idle sway), depth layers, raised 3D buttons with press effect.
 - v1.1.0 — New intro: role chip "Blender MMD Animator & AE Editor", ✦ inquiries line, 📩 email; removed Hanasq.
 - v1.0.2 — Repository renamed to weng-sama.github.io; site at the root address.
