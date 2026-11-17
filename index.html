@@ -19,10 +19,6 @@
       --pink: #f5c3ff;
       --ink: #0f1b33;
       --ink-soft: #4a5672;
-      --rx: 0deg;
-      --ry: 0deg;
-      --lx: 0px;
-      --ly: 0px;
       --ease: cubic-bezier(.2,.8,.2,1);
       --spring: cubic-bezier(.34,1.56,.64,1);
     }
@@ -58,16 +54,15 @@
       position: absolute;
       display: block;
       opacity: 0.6;
-      translate: calc(var(--lx) * var(--d)) calc(var(--ly) * var(--d));
       will-change: transform, border-radius;
     }
-    .liquid .l1 { --d: 1.6; width: 62vmax; height: 62vmax; left: -10%; top: -12%; background: var(--blue);
+    .liquid .l1 { width: 62vmax; height: 62vmax; left: -10%; top: -12%; background: var(--blue);
       animation: morph 14s ease-in-out infinite, flow1 22s ease-in-out infinite alternate; }
-    .liquid .l2 { --d: 1.0; width: 58vmax; height: 58vmax; right: -12%; bottom: -14%; background: var(--pink);
+    .liquid .l2 { width: 58vmax; height: 58vmax; right: -12%; bottom: -14%; background: var(--pink);
       animation: morph 17s ease-in-out -4s infinite, flow2 26s ease-in-out infinite alternate; }
-    .liquid .l3 { --d: 2.2; width: 40vmax; height: 40vmax; left: 40%; top: 30%; background: var(--pink); opacity: 0.55;
+    .liquid .l3 { width: 40vmax; height: 40vmax; left: 40%; top: 30%; background: var(--pink); opacity: 0.55;
       animation: morph 12s ease-in-out -7s infinite, flow3 18s ease-in-out infinite alternate; }
-    .liquid .l4 { --d: 0.7; width: 34vmax; height: 34vmax; left: 5%; bottom: 0; background: var(--blue); opacity: 0.4;
+    .liquid .l4 { width: 34vmax; height: 34vmax; left: 5%; bottom: 0; background: var(--blue); opacity: 0.4;
       animation: morph 16s ease-in-out -2s infinite, flow2 20s ease-in-out -6s infinite alternate-reverse; }
 
     @keyframes morph {
@@ -81,21 +76,15 @@
     @keyframes flow3 { to { transform: translate(-22vmax, 14vmax) rotate(160deg) scale(1.2); } }
 
     /* ================= card ================= */
-    .stage { width: 100%; max-width: 400px; perspective: 1200px; }
+    .stage { width: 100%; max-width: 400px; }
     .card {
       position: relative;
-      transform: rotateX(var(--rx)) rotateY(var(--ry));
       border-radius: 28px;
       padding: 20px 16px 16px;
       background: rgba(255, 255, 255, 0.82);
       -webkit-backdrop-filter: blur(16px);
       backdrop-filter: blur(16px);
       box-shadow: 0 1px 2px rgba(15, 27, 51, 0.04), 0 30px 60px -30px rgba(85, 173, 255, 0.5);
-    }
-    .card.idle { animation: sway 9s ease-in-out infinite; }
-    @keyframes sway {
-      0%, 100% { transform: rotateX(3deg) rotateY(-4deg); }
-      50%      { transform: rotateX(-2deg) rotateY(4deg); }
     }
 
     /* ================= profile header ================= */
@@ -110,6 +99,13 @@
       position: relative;
       width: 76px;
       height: 76px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: none;
+      cursor: zoom-in;
+      -webkit-tap-highlight-color: transparent;
+      transition: scale 0.2s var(--spring);
       animation: pop 0.8s var(--spring) both, float 5s ease-in-out 0.9s infinite;
     }
     @keyframes pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
@@ -353,21 +349,6 @@
     }
     .footer .heart { color: var(--blue); }
 
-    .tilt-btn {
-      display: none;
-      margin: 6px auto 0;
-      padding: 4px 12px;
-      border: 0;
-      border-radius: 100px;
-      background: transparent;
-      font: inherit;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--blue);
-      cursor: pointer;
-    }
-    .tilt-btn.show { display: block; }
-
     .toast {
       position: fixed;
       left: 50%;
@@ -387,6 +368,174 @@
     }
     .toast.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
 
+
+    .avatar-wrap:active { scale: 0.94; }
+    .avatar-wrap:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+    @media (hover: hover) { .avatar-wrap:hover { scale: 1.05; } }
+
+    /* ================= card viewer ================= */
+    .viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .viewer.open { visibility: visible; pointer-events: auto; }
+    .viewer-bg {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 27, 51, 0.45);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transition: opacity 0.3s var(--ease);
+    }
+    .viewer.open .viewer-bg { opacity: 1; }
+
+    .tc-stage {
+      position: relative;
+      perspective: 900px;
+      opacity: 0;
+      transform: scale(0.5) translateY(40px);
+      transition: opacity 0.3s var(--ease), transform 0.55s var(--spring);
+    }
+    .viewer.open .tc-stage { opacity: 1; transform: none; }
+
+    .tcard {
+      --crx: 0deg;
+      --cry: 0deg;
+      --mx: 50%;
+      --my: 50%;
+      --holo: 0.25;
+      position: relative;
+      width: min(76vw, 300px, calc((100dvh - 150px) * 63 / 88));
+      aspect-ratio: 63 / 88;
+      border-radius: 18px;
+      padding: 9px;
+      background: linear-gradient(145deg, var(--blue), var(--pink) 55%, var(--blue));
+      transform: rotateX(var(--crx)) rotateY(var(--cry));
+      transform-style: preserve-3d;
+      box-shadow: 0 30px 60px -20px rgba(15, 27, 51, 0.6);
+      touch-action: none;
+      cursor: grab;
+      -webkit-user-select: none;
+      user-select: none;
+      will-change: transform;
+    }
+    .tcard.dragging { cursor: grabbing; }
+    .tcard.settle { transition: transform 0.7s var(--spring); }
+    .tcard.intro { animation: intro 1.1s var(--ease); }
+    @keyframes intro {
+      0%   { transform: rotateY(-200deg); }
+      100% { transform: rotateY(0deg); }
+    }
+
+    .tc-face {
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      padding: 10px 10px 9px;
+      border-radius: 11px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .tc-top { display: flex; align-items: baseline; justify-content: space-between; }
+    .tc-name { font-size: 19px; font-weight: 900; color: var(--ink); }
+    .tc-mark { font-size: 15px; color: var(--blue); }
+    .tc-art {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--pink);
+      box-shadow: inset 0 0 0 2px rgba(85, 173, 255, 0.5);
+    }
+    .tc-art img { width: 100%; height: 100%; object-fit: cover; display: block; color: transparent; }
+    .tc-role {
+      align-self: flex-start;
+      padding: 3px 9px;
+      border-radius: 100px;
+      background: rgba(85, 173, 255, 0.14);
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .tc-info { font-size: 11px; font-weight: 700; line-height: 1.5; color: var(--ink-soft); }
+    .tc-info b { color: var(--ink); font-weight: 800; }
+    .tc-foot {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 6px;
+      border-top: 1px solid rgba(15, 27, 51, 0.08);
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: var(--ink-soft);
+    }
+
+    /* holo foil + glare */
+    .tc-holo, .tc-glare {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    .tc-holo {
+      background:
+        repeating-linear-gradient(115deg,
+          rgba(85, 173, 255, 0.9) 0%, rgba(245, 195, 255, 0.9) 6%,
+          rgba(255, 255, 255, 0.9) 10%, rgba(85, 173, 255, 0.9) 16%);
+      background-size: 300% 300%;
+      background-position: var(--mx) var(--my);
+      mix-blend-mode: color-dodge;
+      opacity: var(--holo);
+      transition: opacity 0.3s;
+    }
+    .tc-glare {
+      background: radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 55%);
+      mix-blend-mode: overlay;
+      opacity: calc(var(--holo) * 1.1);
+    }
+
+    .viewer-hint {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: max(22px, env(safe-area-inset-bottom));
+      text-align: center;
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #fff;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s 0.3s;
+    }
+    .viewer.open .viewer-hint { opacity: 0.85; }
+    .viewer-close {
+      position: absolute;
+      top: max(16px, env(safe-area-inset-top));
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--ink);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .viewer-close:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+    body.locked { overflow: hidden; }
+
     @media (max-height: 620px) {
       .card { padding: 14px 12px 12px; }
       .head { grid-template-columns: 60px 1fr; gap: 12px; }
@@ -402,7 +551,6 @@
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
-      .card { transform: none !important; }
     }
   </style>
 </head>
@@ -419,13 +567,13 @@
   <div class="liquid" aria-hidden="true"><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i></div>
 
   <div class="stage">
-    <main class="card idle" id="card">
+    <main class="card" id="card">
       <header class="head">
-        <div class="avatar-wrap">
+        <button class="avatar-wrap" id="avatarBtn" type="button" aria-label="查看 weng.ae 卡片" aria-haspopup="dialog">
           <img class="avatar"
                src="https://wengae.wordpress.com/wp-content/uploads/2023/08/4096-pfp-original-colored-background-1.png?w=240"
                alt="weng.ae 頭像" width="76" height="76">
-        </div>
+        </button>
         <div class="who">
           <h1><button class="name" id="name" type="button" data-copy="weng.ae" aria-label="複製名字 weng.ae">weng.ae<svg class="copy-hint" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg></button></h1>
           <p class="role">Blender MMD Animator &amp; AE Editor</p>
@@ -476,8 +624,26 @@
       </ul>
 
       <p class="footer">Thanks for checking out my bio~ <span class="heart">♡</span></p>
-      <button class="tilt-btn" id="tiltBtn" type="button">✦ 開啟傾斜效果</button>
     </main>
+  </div>
+
+
+  <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="weng.ae 卡片" aria-hidden="true">
+    <div class="viewer-bg" data-close></div>
+    <div class="tc-stage">
+      <div class="tcard" id="tcard">
+        <div class="tc-face">
+          <div class="tc-top"><span class="tc-name">weng.ae</span><span class="tc-mark">✦</span></div>
+          <div class="tc-art"><img src="https://wengae.wordpress.com/wp-content/uploads/2023/08/4096-pfp-original-colored-background-1.png?w=700" alt="weng.ae 頭像（大圖）" loading="lazy" draggable="false"><div class="tc-holo"></div></div>
+          <span class="tc-role">Blender MMD Animator &amp; AE Editor</span>
+          <p class="tc-info">✦ Inquiries 中文 / English OK<br><b>📩 weng.ae0@gmail.com</b></p>
+          <div class="tc-foot"><span>WENG-SAMA.GITHUB.IO</span><span>No.001</span></div>
+        </div>
+        <div class="tc-glare"></div>
+      </div>
+    </div>
+    <p class="viewer-hint">拖曳轉動卡片 · 點空白處關閉</p>
+    <button class="viewer-close" type="button" data-close aria-label="關閉">×</button>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -564,87 +730,82 @@
       }
     })();
 
-    // ---------- Tilt: card + liquid background move together ----------
-    // Phone: follows how far the phone is tilted (relative to the angle when the page opened).
-    // Computer: follows the mouse. No input: idle sway, and the liquid follows the sway.
+    // ---------- Profile card viewer (tap the profile picture) ----------
     (function () {
+      var viewer = document.getElementById('viewer');
+      var card = document.getElementById('tcard');
+      var opener = document.getElementById('avatarBtn');
+      var closeBtn = viewer.querySelector('.viewer-close');
+      var MAX = 22; // max rotation (deg)
+      var dragging = false, sx = 0, sy = 0, rx = 0, ry = 0, pid = null;
+
+      function setPose(x, y, holo) {
+        // x, y in -1..1
+        card.style.setProperty('--cry', (x * MAX).toFixed(2) + 'deg');
+        card.style.setProperty('--crx', (-y * MAX).toFixed(2) + 'deg');
+        card.style.setProperty('--mx', (50 + x * 50).toFixed(1) + '%');
+        card.style.setProperty('--my', (50 + y * 50).toFixed(1) + '%');
+        card.style.setProperty('--holo', holo.toFixed(2));
+      }
+      function rest() {
+        card.classList.add('settle');
+        setPose(0, 0, 0.25);
+        setTimeout(function () { card.classList.remove('settle'); }, 700);
+      }
+
+      function open() {
+        viewer.classList.add('open');
+        viewer.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('locked');
+        setPose(0, 0, 0.25);
+        if (!REDUCE) {
+          card.classList.remove('intro'); void card.offsetWidth; card.classList.add('intro');
+        }
+        setTimeout(function () { closeBtn.focus(); }, 50);
+      }
+      function close() {
+        viewer.classList.remove('open');
+        viewer.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('locked');
+        opener.focus();
+      }
+      opener.addEventListener('click', open);
+      viewer.addEventListener('click', function (e) { if (e.target.hasAttribute('data-close')) close(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && viewer.classList.contains('open')) close(); });
+      card.addEventListener('animationend', function () { card.classList.remove('intro'); });
+
       if (REDUCE) return;
-      var card = document.getElementById('card');
-      var MAX = 14;   // max card tilt (deg)
-      var RANGE = 30; // phone tilt (deg) that maps to MAX
-      var SHIFT = 40; // max liquid shift (px) at full tilt
-      var tx = 0, ty = 0, cx = 0, cy = 0;
-      var mode = 'idle', base = null, idleTimer;
-      var t0 = performance.now();
 
-      function setTarget(x, y, src) {
-        tx = Math.max(-1, Math.min(1, x));
-        ty = Math.max(-1, Math.min(1, y));
-        if (mode !== src) { mode = src; card.classList.remove('idle'); }
-        if (src === 'mouse') {
-          clearTimeout(idleTimer);
-          idleTimer = setTimeout(function () {
-            if (mode === 'mouse') { mode = 'idle'; tx = ty = 0; card.classList.add('idle'); t0 = performance.now(); }
-          }, 4000);
-        }
-      }
-
-      window.addEventListener('pointermove', function (e) {
-        if (e.pointerType !== 'mouse' || mode === 'gyro') return;
-        setTarget((e.clientX / innerWidth - 0.5) * 2, (e.clientY / innerHeight - 0.5) * 2, 'mouse');
+      // Drag (finger or mouse) to turn the card
+      card.addEventListener('pointerdown', function (e) {
+        dragging = true; pid = e.pointerId;
+        sx = e.clientX; sy = e.clientY;
+        card.classList.remove('settle', 'intro');
+        card.classList.add('dragging');
+        try { card.setPointerCapture(pid); } catch (_) {}
       });
-
-      function screenAngle() {
-        if (screen.orientation && typeof screen.orientation.angle === 'number') return screen.orientation.angle;
-        return window.orientation || 0;
-      }
-      function onOrient(e) {
-        if (e.beta == null || e.gamma == null) return;
-        var lr, fb, a = screenAngle();
-        if (a === 90)                    { lr = e.beta;   fb = -e.gamma; }
-        else if (a === -90 || a === 270) { lr = -e.beta;  fb = e.gamma; }
-        else if (a === 180)              { lr = -e.gamma; fb = -e.beta; }
-        else                             { lr = e.gamma;  fb = e.beta; }
-        if (!base) base = { lr: lr, fb: fb };
-        setTarget((lr - base.lr) / RANGE, (fb - base.fb) / RANGE, 'gyro');
-      }
-      window.addEventListener('orientationchange', function () { base = null; });
-      if (screen.orientation) screen.orientation.addEventListener('change', function () { base = null; });
-
-      var btn = document.getElementById('tiltBtn');
-      var gotGyro = false;
-      window.addEventListener('deviceorientation', function once(e) {
-        if (e.beta != null) { gotGyro = true; window.removeEventListener('deviceorientation', once); }
-      });
-      if (window.DeviceOrientationEvent) window.addEventListener('deviceorientation', onOrient);
-      if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        setTimeout(function () { if (!gotGyro && matchMedia('(pointer: coarse)').matches) btn.classList.add('show'); }, 1500);
-        btn.addEventListener('click', function () {
-          DeviceOrientationEvent.requestPermission().then(function (s) {
-            if (s === 'granted') { btn.classList.remove('show'); toast('傾斜效果已開啟 ✦'); }
-            else toast('未允許動作感應');
-          }).catch(function () { toast('無法開啟傾斜效果'); });
-        });
-      }
-
-      (function loop(now) {
-        cx += (tx - cx) * 0.12;
-        cy += (ty - cy) * 0.12;
-        var lx, ly;
-        if (mode === 'idle') {
-          // match the card's 9s idle sway
-          var p = ((now - t0) / 9000) * Math.PI * 2;
-          lx = -Math.cos(p) * 0.3;
-          ly = Math.cos(p) * 0.2;
-        } else {
-          card.style.setProperty('--ry', (cx * MAX).toFixed(2) + 'deg');
-          card.style.setProperty('--rx', (-cy * MAX).toFixed(2) + 'deg');
-          lx = cx; ly = cy;
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        if (dragging) {
+          rx = Math.max(-1, Math.min(1, (e.clientX - sx) / (r.width * 0.6)));
+          ry = Math.max(-1, Math.min(1, (e.clientY - sy) / (r.height * 0.6)));
+          setPose(rx, ry, 0.35 + 0.45 * Math.min(1, Math.hypot(rx, ry)));
+        } else if (e.pointerType === 'mouse') {
+          // desktop: hover to look around
+          var x = ((e.clientX - r.left) / r.width - 0.5) * 2;
+          var y = ((e.clientY - r.top) / r.height - 0.5) * 2;
+          setPose(x * 0.7, y * 0.7, 0.35 + 0.35 * Math.min(1, Math.hypot(x, y)));
         }
-        root.style.setProperty('--lx', (-lx * SHIFT).toFixed(1) + 'px');
-        root.style.setProperty('--ly', (-ly * SHIFT).toFixed(1) + 'px');
-        requestAnimationFrame(loop);
-      })(performance.now());
+      });
+      function end() {
+        if (!dragging) return;
+        dragging = false;
+        card.classList.remove('dragging');
+        rest();
+      }
+      card.addEventListener('pointerup', end);
+      card.addEventListener('pointercancel', end);
+      card.addEventListener('pointerleave', function (e) { if (!dragging && e.pointerType === 'mouse') rest(); });
     })();
   </script>
 </body>
