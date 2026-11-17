@@ -1,8 +1,8 @@
 # weng.ae — link in bio
 
-v1.0.0
+v1.0.1
 
-Personal link page for weng.ae · Hanasq, hosted on GitHub Pages at https://weng.works.
+Personal link page for weng.ae · Hanasq, hosted on GitHub Pages at https://weng-sama.github.io/weng.works/.
 
 - Colors: `#55adff` (blue) / `#f5c3ff` (pink)
 - Single file: `index.html` (no build step)
@@ -10,4 +10,5 @@ Personal link page for weng.ae · Hanasq, hosted on GitHub Pages at https://weng
 
 ## Changelog
 
+- v1.0.1 — Use free GitHub Pages address; remove custom domain.
 - v1.0.0 — First release: animated gradient background, floating avatar ring, staggered link buttons, click-to-copy email.
