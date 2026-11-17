@@ -1,6 +1,6 @@
 # weng.ae — link in bio
 
-v1.7.0
+v1.7.1
 
 Personal link page for weng.ae (Blender MMD Animator & AE Editor), hosted on GitHub Pages at https://weng-sama.github.io.
 
@@ -10,6 +10,7 @@ Personal link page for weng.ae (Blender MMD Animator & AE Editor), hosted on Git
 
 ## Changelog
 
+- v1.7.1 — Profile preview is now just the round avatar (holo shine, drag to turn), no trading card.
 - v1.7.0 — Remove tilt (card and background no longer follow phone/mouse; liquid background still flows); tap profile picture to open a holo trading-card preview you can drag to turn.
 - v1.6.0 — Tap name to copy; liquid flowing background linked to tilt; compact horizontal header so all 7 links fit on one phone screen; fix tap hit-testing.
 - v1.5.0 — No text animation (only the profile picture animates); Shop icon → Payhip logo; fix press state on link rows (3D hit-test).
