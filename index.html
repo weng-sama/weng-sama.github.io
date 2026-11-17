@@ -12,217 +12,223 @@
   <link rel="icon" href="https://wengae.wordpress.com/wp-content/uploads/2023/08/4096-pfp-original-colored-background-1.png?w=64">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --blue: #55adff;
-      --blue-deep: #2f8ae6;
       --pink: #f5c3ff;
-      --pink-deep: #dc9aec;
       --ink: #0f1b33;
       --ink-soft: #4a5672;
-      --radius: 32px;
       --rx: 0deg;
       --ry: 0deg;
+      --lx: 0px;
+      --ly: 0px;
       --ease: cubic-bezier(.2,.8,.2,1);
       --spring: cubic-bezier(.34,1.56,.64,1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { min-height: 100%; }
+    html { overflow-x: hidden; }
 
     body {
       font-family: "Nunito", system-ui, -apple-system, "Segoe UI", "Noto Sans TC", sans-serif;
       color: var(--ink);
-      background: linear-gradient(160deg, #eef6ff 0%, #ffffff 50%, #fdf3ff 100%);
-      background-attachment: fixed;
+      background: #ffffff;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       min-height: 100dvh;
-      padding: 56px 18px;
+      padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      perspective: 1200px;
     }
 
+    /* ================= liquid background ================= */
+    .liquid {
+      position: fixed;
+      inset: -15%;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+      filter: blur(48px);
+    }
+    .liquid i {
+      position: absolute;
+      display: block;
+      opacity: 0.6;
+      translate: calc(var(--lx) * var(--d)) calc(var(--ly) * var(--d));
+      will-change: transform, border-radius;
+    }
+    .liquid .l1 { --d: 1.6; width: 62vmax; height: 62vmax; left: -10%; top: -12%; background: var(--blue);
+      animation: morph 14s ease-in-out infinite, flow1 22s ease-in-out infinite alternate; }
+    .liquid .l2 { --d: 1.0; width: 58vmax; height: 58vmax; right: -12%; bottom: -14%; background: var(--pink);
+      animation: morph 17s ease-in-out -4s infinite, flow2 26s ease-in-out infinite alternate; }
+    .liquid .l3 { --d: 2.2; width: 40vmax; height: 40vmax; left: 40%; top: 30%; background: var(--pink); opacity: 0.55;
+      animation: morph 12s ease-in-out -7s infinite, flow3 18s ease-in-out infinite alternate; }
+    .liquid .l4 { --d: 0.7; width: 34vmax; height: 34vmax; left: 5%; bottom: 0; background: var(--blue); opacity: 0.4;
+      animation: morph 16s ease-in-out -2s infinite, flow2 20s ease-in-out -6s infinite alternate-reverse; }
+
+    @keyframes morph {
+      0%, 100% { border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%; }
+      25%      { border-radius: 63% 37% 45% 55% / 55% 62% 38% 45%; }
+      50%      { border-radius: 38% 62% 33% 67% / 64% 35% 65% 36%; }
+      75%      { border-radius: 56% 44% 70% 30% / 38% 58% 42% 62%; }
+    }
+    @keyframes flow1 { to { transform: translate(18vmax, 12vmax) rotate(120deg) scale(1.1); } }
+    @keyframes flow2 { to { transform: translate(-16vmax, -10vmax) rotate(-90deg) scale(0.92); } }
+    @keyframes flow3 { to { transform: translate(-22vmax, 14vmax) rotate(160deg) scale(1.2); } }
+
     /* ================= card ================= */
-    .stage { width: 100%; max-width: 420px; transform-style: preserve-3d; }
+    .stage { width: 100%; max-width: 400px; perspective: 1200px; }
     .card {
       position: relative;
-      transform-style: preserve-3d;
       transform: rotateX(var(--rx)) rotateY(var(--ry));
-      border-radius: var(--radius);
-      padding: 44px 26px 32px;
-      text-align: center;
-      background: #ffffff;
-      box-shadow:
-        0 1px 2px rgba(15, 27, 51, 0.04),
-        0 30px 60px -30px rgba(85, 173, 255, 0.45);
+      border-radius: 28px;
+      padding: 20px 16px 16px;
+      background: rgba(255, 255, 255, 0.82);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 1px 2px rgba(15, 27, 51, 0.04), 0 30px 60px -30px rgba(85, 173, 255, 0.5);
     }
     .card.idle { animation: sway 9s ease-in-out infinite; }
     @keyframes sway {
       0%, 100% { transform: rotateX(3deg) rotateY(-4deg); }
       50%      { transform: rotateX(-2deg) rotateY(4deg); }
     }
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      pointer-events: none;
-      background: radial-gradient(600px circle at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.65), transparent 45%);
-      mix-blend-mode: soft-light;
-    }
-    .card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      transform: translateZ(-14px);
-      background: linear-gradient(180deg, var(--blue), var(--pink));
-      opacity: 0.18;
-      filter: blur(1px);
-      pointer-events: none;
-    }
-    .layer { transform-style: preserve-3d; }
-    .z1 { transform: translateZ(18px); }
-    .z2 { transform: translateZ(32px); }
-    .z3 { transform: translateZ(52px); }
 
-    /* ================= avatar ================= */
+    /* ================= profile header ================= */
+    .head {
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      align-items: center;
+      gap: 14px;
+      padding: 0 4px;
+    }
     .avatar-wrap {
       position: relative;
-      width: 116px;
-      height: 116px;
-      margin: 0 auto 18px;
-      opacity: 0;
-      animation: pop 0.8s var(--spring) 0.05s forwards, float 5s ease-in-out 0.9s infinite;
+      width: 76px;
+      height: 76px;
+      animation: pop 0.8s var(--spring) both, float 5s ease-in-out 0.9s infinite;
     }
     @keyframes pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
     .avatar-wrap::before {
       content: "";
       position: absolute;
-      inset: -6px;
+      inset: -4px;
       border-radius: 50%;
       background: conic-gradient(var(--blue), var(--pink), var(--blue));
       animation: spin 6s linear infinite;
-    }
-    .avatar-wrap::after {
-      content: "";
-      position: absolute;
-      left: 14%;
-      right: 14%;
-      bottom: -22px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(15, 27, 51, 0.14);
-      filter: blur(6px);
-      animation: shadowPulse 5s ease-in-out infinite;
     }
     .avatar {
       position: relative;
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      border: 4px solid #fff;
+      border: 3px solid #fff;
       object-fit: cover;
       display: block;
       color: transparent;
       font-size: 0;
       background: var(--pink);
-      box-shadow: inset 0 -6px 14px rgba(15, 27, 51, 0.12);
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes float { 50% { translate: 0 -8px; } }
-    @keyframes shadowPulse { 50% { transform: scaleX(0.8); opacity: 0.6; } }
+    @keyframes float { 50% { translate: 0 -4px; } }
 
-    /* ================= text ================= */
-    h1 {
-      font-size: 30px;
-      font-weight: 900;
-      letter-spacing: 0.01em;
-      color: var(--ink);
-      text-shadow: 0 2px 0 var(--pink);
-    }
-
-    .role {
+    .who { min-width: 0; text-align: left; }
+    .name {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      min-height: 32px;
-      margin-top: 12px;
-      padding: 7px 16px;
-      border-radius: 100px;
-      background: rgba(85, 173, 255, 0.1);
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.03em;
-      color: var(--ink);
+      gap: 6px;
       border: 0;
+      background: none;
+      font: inherit;
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--ink);
+      text-shadow: 0 2px 0 var(--pink);
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 0 4px;
+      margin-left: -4px;
+      transition: background-color 0.2s, transform 0.15s;
+      -webkit-tap-highlight-color: transparent;
     }
-
-    .divider {
-      width: 48px;
-      height: 4px;
-      border-radius: 5px;
-      margin: 20px auto 16px;
-      background: linear-gradient(90deg, var(--blue), var(--pink));
+    .name .copy-hint {
+      width: 15px;
+      height: 15px;
+      fill: none;
+      stroke: var(--blue);
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.7;
     }
+    @media (hover: hover) { .name:hover { background: rgba(85, 173, 255, 0.1); } }
+    .name:active { transform: scale(0.96); }
+    .name:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+    .name.copied { background: var(--pink); }
 
-    .bio {
-      font-size: 14.5px;
-      font-weight: 700;
-      line-height: 1.8;
+    .role {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 4px 9px;
+      border-radius: 100px;
+      background: rgba(85, 173, 255, 0.12);
+      font-size: clamp(10.5px, 2.85vw, 12px);
+      font-weight: 800;
+      white-space: nowrap;
       color: var(--ink);
     }
-    .bio .star {
-      display: inline-block;
-      color: var(--blue);
-    }
 
-    /* ================= email chip ================= */
+    .contact {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px 10px;
+      margin: 14px 4px 0;
+      padding-top: 12px;
+      border-top: 1px solid rgba(15, 27, 51, 0.06);
+    }
+    .bio { font-size: 13px; font-weight: 700; color: var(--ink); }
+    .bio .star { color: var(--blue); }
+
     .email {
       position: relative;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      margin-top: 10px;
-      padding: 8px 16px;
-      border: 0;
+      gap: 5px;
+      padding: 6px 12px;
+      border: 1px dashed var(--pink);
       border-radius: 100px;
       background: #fff;
       font: inherit;
-      font-size: 13.5px;
+      font-size: 12.5px;
       font-weight: 800;
       color: var(--ink);
       cursor: pointer;
       overflow: hidden;
       isolation: isolate;
-      border: 1px dashed var(--pink);
-      transition: transform 0.2s var(--spring), box-shadow 0.2s, background 0.3s;
+      --ripple-c: rgba(245, 195, 255, 0.6);
+      transition: transform 0.2s var(--spring), background 0.3s;
       -webkit-tap-highlight-color: transparent;
     }
-    @media (hover: hover) {
-      .email:hover { transform: translateY(-1px); background: rgba(245, 195, 255, 0.35); }
-    }
+    @media (hover: hover) { .email:hover { background: rgba(245, 195, 255, 0.35); } }
     .email.is-pressed { transform: scale(0.95); transition-duration: 0.08s; }
     .email.copied { background: var(--pink); }
-    .email { --ripple-c: rgba(245, 195, 255, 0.6); }
 
-    /* ================= link cards ================= */
+    /* ================= link rows ================= */
     .links {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-top: 26px;
+      gap: 8px;
+      margin-top: 14px;
       text-align: left;
-      transform-style: flat;
     }
-
-
     .link {
       --bg: #ffffff;
       --tile: rgba(85, 173, 255, 0.14);
@@ -233,20 +239,19 @@
       --ripple-c: rgba(85, 173, 255, 0.18);
       position: relative;
       display: grid;
-      grid-template-columns: 44px 1fr 32px;
+      grid-template-columns: 36px 1fr 28px;
       align-items: center;
-      gap: 14px;
-      min-height: 66px;
-      padding: 10px 12px 10px 10px;
-      border-radius: 20px;
+      gap: 12px;
+      min-height: 54px;
+      padding: 8px 10px 8px 9px;
+      border-radius: 17px;
       background: var(--bg);
       color: var(--ink);
       text-decoration: none;
       overflow: hidden;
       isolation: isolate;
       border: 1px solid rgba(15, 27, 51, 0.07);
-      box-shadow: none;
-      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s, background-color 0.25s;
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s;
       -webkit-tap-highlight-color: transparent;
       -webkit-user-select: none;
       user-select: none;
@@ -258,65 +263,45 @@
       z-index: 1;
       display: grid;
       place-items: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
       background: var(--tile);
       color: var(--tile-ink);
       transition: transform 0.35s var(--spring);
     }
-    .ico svg { width: 22px; height: 22px; fill: currentColor; }
-    .ico svg.stroke { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .ico svg { width: 19px; height: 19px; fill: currentColor; }
 
     .txt { position: relative; z-index: 1; display: flex; flex-direction: column; min-width: 0; }
-    .txt .label { font-size: 15px; font-weight: 800; letter-spacing: 0.01em; line-height: 1.25; }
-    .txt .sub {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ink-soft);
-      line-height: 1.35;
-    }
+    .txt .label { font-size: 14.5px; font-weight: 800; line-height: 1.2; }
+    .txt .sub { font-size: 11.5px; font-weight: 600; color: var(--ink-soft); line-height: 1.3; }
 
     .go {
       position: relative;
       z-index: 1;
       display: grid;
       place-items: center;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       background: var(--go);
       color: var(--go-ink);
       transition: background-color 0.25s, color 0.25s, transform 0.35s var(--spring);
     }
-    .go svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .go svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 
     @media (hover: hover) {
-      .link:hover {
-        transform: translateY(-2px);
-        border-color: var(--hover-ring);
-        box-shadow: 0 12px 24px -16px rgba(85, 173, 255, 0.8);
-      }
+      .link:hover { transform: translateY(-2px); border-color: var(--hover-ring); box-shadow: 0 12px 24px -16px rgba(85, 173, 255, 0.8); }
       .link:hover .ico { transform: scale(1.08) rotate(-6deg); }
       .link:hover .go { background: var(--blue); color: #fff; transform: translateX(2px); }
     }
     .link:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
 
-    /* press: settle down, tint, icon squish */
-    .link.is-pressed {
-      transform: scale(0.975);
-      transition-duration: 0.08s;
-      box-shadow: 0 1px 2px rgba(15, 27, 51, 0.06);
-      border-color: var(--hover-ring);
-    }
+    .link.is-pressed { transform: scale(0.975); transition-duration: 0.08s; border-color: var(--hover-ring); }
     .link.is-pressed .ico { transform: scale(0.9); }
     .link.is-pressed .go { background: var(--blue); color: #fff; transform: translateX(4px); }
     .link.bounce { animation: bounce 0.45s var(--spring); }
-    @keyframes bounce {
-      0%   { transform: scale(0.975); }
-      50%  { transform: scale(1.015); }
-      100% { transform: none; }
-    }
+    @keyframes bounce { 0% { transform: scale(0.975); } 50% { transform: scale(1.015); } 100% { transform: none; } }
 
     .ripple {
       position: absolute;
@@ -329,79 +314,64 @@
       pointer-events: none;
       animation: ripple 0.7s var(--ease) forwards;
     }
-    @keyframes ripple {
-      from { transform: scale(0); opacity: 1; }
-      to   { transform: scale(var(--s, 40)); opacity: 0; }
-    }
+    @keyframes ripple { from { transform: scale(0); opacity: 1; } to { transform: scale(var(--s, 40)); opacity: 0; } }
 
-    /* primary (Discord) */
     .link.primary {
-      --bg: var(--blue);
       --tile: rgba(255, 255, 255, 0.35);
       --tile-ink: var(--ink);
       --go: rgba(255, 255, 255, 0.55);
       --go-ink: var(--ink);
       --hover-ring: transparent;
       --ripple-c: rgba(255, 255, 255, 0.45);
-      background: var(--bg);
+      background: var(--blue);
       border-color: transparent;
       box-shadow: 0 10px 22px -14px rgba(85, 173, 255, 0.9);
     }
     .link.primary .sub { color: var(--ink); opacity: 0.75; }
-    @media (hover: hover) {
-      .link.primary:hover { box-shadow: 0 16px 28px -14px rgba(85, 173, 255, 1); }
-      .link.primary:hover .go { background: #fff; color: var(--blue); }
-    }
+    @media (hover: hover) { .link.primary:hover .go { background: #fff; color: var(--blue); } }
     .link.primary.is-pressed .go { background: #fff; color: var(--blue); }
 
-    /* accent (Shop) */
     .link.accent {
-      --bg: var(--pink);
       --tile: rgba(255, 255, 255, 0.55);
       --tile-ink: var(--ink);
       --go: rgba(255, 255, 255, 0.65);
       --go-ink: var(--ink);
       --hover-ring: transparent;
       --ripple-c: rgba(255, 255, 255, 0.55);
-      background: var(--bg);
+      background: var(--pink);
       border-color: transparent;
       box-shadow: 0 10px 22px -14px rgba(245, 195, 255, 1);
     }
 
     .footer {
-      margin-top: 28px;
-      font-size: 13px;
+      margin-top: 12px;
+      text-align: center;
+      font-size: 12px;
       font-weight: 800;
       color: var(--ink-soft);
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
     }
-    .footer .heart {
-      display: inline-block;
-      color: var(--blue);
-    }
+    .footer .heart { color: var(--blue); }
 
-    /* iPhone: one-tap switch for the motion sensor */
     .tilt-btn {
       display: none;
-      margin: 14px auto 0;
-      padding: 6px 14px;
+      margin: 6px auto 0;
+      padding: 4px 12px;
       border: 0;
       border-radius: 100px;
       background: transparent;
       font: inherit;
       font-size: 12px;
       font-weight: 800;
-      letter-spacing: 0.04em;
       color: var(--blue);
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
     }
-    .tilt-btn.show { display: inline-block; }
+    .tilt-btn.show { display: block; }
 
     .toast {
       position: fixed;
       left: 50%;
-      bottom: 28px;
+      bottom: max(24px, env(safe-area-inset-bottom));
       transform: translate(-50%, 20px) scale(0.9);
       padding: 10px 18px;
       border-radius: 100px;
@@ -413,12 +383,25 @@
       pointer-events: none;
       box-shadow: 0 10px 24px -8px rgba(15, 27, 51, 0.5);
       transition: opacity 0.3s, transform 0.4s var(--spring);
+      z-index: 10;
     }
     .toast.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
 
+    @media (max-height: 620px) {
+      .card { padding: 14px 12px 12px; }
+      .head { grid-template-columns: 60px 1fr; gap: 12px; }
+      .avatar-wrap { width: 60px; height: 60px; }
+      .name { font-size: 22px; }
+      .contact { margin-top: 10px; padding-top: 8px; }
+      .links { gap: 6px; margin-top: 10px; }
+      .link { min-height: 46px; padding: 5px 8px 5px 7px; border-radius: 14px; grid-template-columns: 32px 1fr 26px; }
+      .ico { width: 32px; height: 32px; border-radius: 10px; }
+      .txt .sub { font-size: 11px; }
+      .footer { margin-top: 8px; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
-      .avatar-wrap { opacity: 1 !important; transform: none !important; }
       .card { transform: none !important; }
     }
   </style>
@@ -433,30 +416,28 @@
     <symbol id="i-threads" viewBox="0 0 24 24"><path d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/></symbol>
     <symbol id="i-payhip" viewBox="0 0 24 24"><path d="M3.695 0A3.696 3.696 0 0 0 0 3.695v12.92A7.384 7.384 0 0 0 7.385 24h12.92A3.696 3.696 0 0 0 24 20.305V0H3.695zm11.653 5.604a3.88 3.88 0 0 1 .166 0 3.88 3.88 0 0 1 2.677 1.132 3.88 3.88 0 0 1 0 5.48l-.36.356c-1.826-1.825-3.648-3.656-5.476-5.482l.358-.354a3.88 3.88 0 0 1 2.635-1.132zm-6.627.125a3.88 3.88 0 0 1 2.566 1c2.068 2.062 4.127 4.133 6.192 6.199l-5.481 5.482-6.19-6.203C3.549 9.7 5.346 5.702 8.722 5.729zm-1.744 1.71a.464.464 0 0 0-.465.465v1.817c0 .256.208.463.465.463h1.816a.464.464 0 0 0 .463-.463l.008-1.817A.464.464 0 0 0 8.8 7.44H6.977z"/></symbol>
   </svg>
+  <div class="liquid" aria-hidden="true"><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i></div>
+
   <div class="stage">
     <main class="card idle" id="card">
-      <div class="layer z3">
+      <header class="head">
         <div class="avatar-wrap">
           <img class="avatar"
-               src="https://wengae.wordpress.com/wp-content/uploads/2023/08/4096-pfp-original-colored-background-1.png?w=300"
-               alt="weng.ae 頭像" width="116" height="116">
+               src="https://wengae.wordpress.com/wp-content/uploads/2023/08/4096-pfp-original-colored-background-1.png?w=240"
+               alt="weng.ae 頭像" width="76" height="76">
         </div>
-      </div>
+        <div class="who">
+          <h1><button class="name" id="name" type="button" data-copy="weng.ae" aria-label="複製名字 weng.ae">weng.ae<svg class="copy-hint" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg></button></h1>
+          <p class="role">Blender MMD Animator &amp; AE Editor</p>
+        </div>
+      </header>
 
-      <div class="layer z2">
-        <h1>weng.ae</h1>
-        <p class="role">Blender MMD Animator &amp; AE Editor</p>
-      </div>
-
-      <div class="layer z1">
-        <div class="divider"></div>
+      <div class="contact">
         <p class="bio"><span class="star">✦</span> Inquiries 中文 / English OK</p>
-        <button class="email press" type="button" data-email="weng.ae0@gmail.com" aria-label="複製 email weng.ae0@gmail.com">
-          📩 weng.ae0@gmail.com
-        </button>
+        <button class="email press" type="button" data-copy="weng.ae0@gmail.com" aria-label="複製 email weng.ae0@gmail.com">📩 weng.ae0@gmail.com</button>
       </div>
 
-      <ul class="links layer z2">
+      <ul class="links">
         <li style="--i:0"><a class="link press primary" href="https://discord.gg/eZ4nu9p7uf" target="_blank" rel="noopener">
           <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-discord"/></svg></span>
           <span class="txt"><span class="label">Discord Server</span><span class="sub">MMD method &amp; clips here</span></span>
@@ -494,15 +475,16 @@
         </a></li>
       </ul>
 
-      <p class="footer layer z1">Thanks for checking out my bio~ <span class="heart">♡</span></p>
+      <p class="footer">Thanks for checking out my bio~ <span class="heart">♡</span></p>
       <button class="tilt-btn" id="tiltBtn" type="button">✦ 開啟傾斜效果</button>
     </main>
   </div>
 
-  <div class="toast" id="toast" role="status" aria-live="polite">已複製 email ✦</div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
     var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var root = document.documentElement;
     var toastEl = document.getElementById('toast');
     var toastTimer;
     function toast(msg) {
@@ -511,6 +493,34 @@
       clearTimeout(toastTimer);
       toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
     }
+
+    // ---------- Copy name / email ----------
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+      return new Promise(function (ok, fail) {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+        ta.remove();
+      });
+    }
+    [['name', '已複製名字 ✦'], ['email', '已複製 email ✦']].forEach(function (pair) {
+      var el = document.querySelector(pair[0] === 'name' ? '#name' : '.email');
+      var t;
+      el.addEventListener('click', function () {
+        var text = el.getAttribute('data-copy');
+        copyText(text).then(function () {
+          el.classList.add('copied');
+          clearTimeout(t);
+          t = setTimeout(function () { el.classList.remove('copied'); }, 1500);
+          if (navigator.vibrate) { try { navigator.vibrate(10); } catch (_) {} }
+          toast(pair[1]);
+        }, function () {
+          if (pair[0] === 'email') window.location.href = 'mailto:' + text;
+        });
+      });
+    });
 
     // ---------- Button feedback: press, ripple, bounce, haptic ----------
     (function () {
@@ -554,17 +564,18 @@
       }
     })();
 
-    // ---------- Card tilt ----------
-    // Phone: the card follows how far the phone is tilted (relative to how it was held
-    // when the page opened). Computer: follows the mouse. Nothing: gentle idle sway.
+    // ---------- Tilt: card + liquid background move together ----------
+    // Phone: follows how far the phone is tilted (relative to the angle when the page opened).
+    // Computer: follows the mouse. No input: idle sway, and the liquid follows the sway.
     (function () {
       if (REDUCE) return;
       var card = document.getElementById('card');
-      var MAX = 14;            // max card tilt in degrees
-      var RANGE = 30;          // phone tilt (degrees) that maps to MAX
+      var MAX = 14;   // max card tilt (deg)
+      var RANGE = 30; // phone tilt (deg) that maps to MAX
+      var SHIFT = 40; // max liquid shift (px) at full tilt
       var tx = 0, ty = 0, cx = 0, cy = 0;
-      var mode = 'idle';       // 'idle' | 'mouse' | 'gyro'
-      var base = null, idleTimer;
+      var mode = 'idle', base = null, idleTimer;
+      var t0 = performance.now();
 
       function setTarget(x, y, src) {
         tx = Math.max(-1, Math.min(1, x));
@@ -573,7 +584,7 @@
         if (src === 'mouse') {
           clearTimeout(idleTimer);
           idleTimer = setTimeout(function () {
-            if (mode === 'mouse') { mode = 'idle'; tx = ty = 0; card.classList.add('idle'); }
+            if (mode === 'mouse') { mode = 'idle'; tx = ty = 0; card.classList.add('idle'); t0 = performance.now(); }
           }, 4000);
         }
       }
@@ -590,70 +601,50 @@
       function onOrient(e) {
         if (e.beta == null || e.gamma == null) return;
         var lr, fb, a = screenAngle();
-        // left-right and front-back tilt as seen on screen
-        if (a === 90)       { lr = e.beta;   fb = -e.gamma; }
-        else if (a === -90 || a === 270) { lr = -e.beta; fb = e.gamma; }
-        else if (a === 180) { lr = -e.gamma; fb = -e.beta; }
-        else                { lr = e.gamma;  fb = e.beta; }
+        if (a === 90)                    { lr = e.beta;   fb = -e.gamma; }
+        else if (a === -90 || a === 270) { lr = -e.beta;  fb = e.gamma; }
+        else if (a === 180)              { lr = -e.gamma; fb = -e.beta; }
+        else                             { lr = e.gamma;  fb = e.beta; }
         if (!base) base = { lr: lr, fb: fb };
         setTarget((lr - base.lr) / RANGE, (fb - base.fb) / RANGE, 'gyro');
       }
       window.addEventListener('orientationchange', function () { base = null; });
       if (screen.orientation) screen.orientation.addEventListener('change', function () { base = null; });
 
-      function startGyro() { window.addEventListener('deviceorientation', onOrient); }
-
       var btn = document.getElementById('tiltBtn');
       var gotGyro = false;
       window.addEventListener('deviceorientation', function once(e) {
         if (e.beta != null) { gotGyro = true; window.removeEventListener('deviceorientation', once); }
       });
-      if (window.DeviceOrientationEvent) startGyro();
+      if (window.DeviceOrientationEvent) window.addEventListener('deviceorientation', onOrient);
       if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        // iPhone / iPad: motion data needs one tap to allow; show the switch only if no data arrives
         setTimeout(function () { if (!gotGyro && matchMedia('(pointer: coarse)').matches) btn.classList.add('show'); }, 1500);
         btn.addEventListener('click', function () {
           DeviceOrientationEvent.requestPermission().then(function (s) {
-            if (s === 'granted') {
-              btn.classList.remove('show');
-              toast('傾斜效果已開啟 ✦');
-            } else {
-              toast('未允許動作感應');
-            }
+            if (s === 'granted') { btn.classList.remove('show'); toast('傾斜效果已開啟 ✦'); }
+            else toast('未允許動作感應');
           }).catch(function () { toast('無法開啟傾斜效果'); });
         });
       }
 
-      (function loop() {
+      (function loop(now) {
         cx += (tx - cx) * 0.12;
         cy += (ty - cy) * 0.12;
-        if (mode !== 'idle') {
+        var lx, ly;
+        if (mode === 'idle') {
+          // match the card's 9s idle sway
+          var p = ((now - t0) / 9000) * Math.PI * 2;
+          lx = -Math.cos(p) * 0.3;
+          ly = Math.cos(p) * 0.2;
+        } else {
           card.style.setProperty('--ry', (cx * MAX).toFixed(2) + 'deg');
           card.style.setProperty('--rx', (-cy * MAX).toFixed(2) + 'deg');
-          card.style.setProperty('--gx', (50 + cx * 40).toFixed(1) + '%');
-          card.style.setProperty('--gy', (cy * 40).toFixed(1) + '%');
+          lx = cx; ly = cy;
         }
+        root.style.setProperty('--lx', (-lx * SHIFT).toFixed(1) + 'px');
+        root.style.setProperty('--ly', (-ly * SHIFT).toFixed(1) + 'px');
         requestAnimationFrame(loop);
-      })();
-    })();
-
-    // ---------- Copy email ----------
-    (function () {
-      var btn = document.querySelector('.email');
-      var t;
-      btn.addEventListener('click', function () {
-        var email = btn.getAttribute('data-email');
-        if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(email).then(function () {
-            btn.classList.add('copied');
-            clearTimeout(t);
-            t = setTimeout(function () { btn.classList.remove('copied'); }, 1800);
-            toast('已複製 email ✦');
-          }, function () { window.location.href = 'mailto:' + email; });
-        } else {
-          window.location.href = 'mailto:' + email;
-        }
-      });
+      })(performance.now());
     })();
   </script>
 </body>
