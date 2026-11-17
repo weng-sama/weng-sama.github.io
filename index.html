@@ -410,7 +410,7 @@
       --cry: 0deg;
       --mx: 50%;
       --my: 50%;
-      --holo: 0.25;
+      --holo: 0;
       position: relative;
       width: min(72vw, 320px, calc(100dvh - 180px));
       aspect-ratio: 1;
@@ -419,7 +419,9 @@
       background: conic-gradient(from 200deg, var(--blue), var(--pink), var(--blue), var(--pink), var(--blue));
       transform: rotateX(var(--crx)) rotateY(var(--cry));
       transform-style: preserve-3d;
-      box-shadow: 0 30px 60px -20px rgba(15, 27, 51, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+      --sx: 0px;
+      --sy: 24px;
+      box-shadow: var(--sx) var(--sy) 50px -16px rgba(15, 27, 51, 0.55);
       touch-action: none;
       cursor: grab;
       -webkit-user-select: none;
@@ -427,7 +429,7 @@
       will-change: transform;
     }
     .tcard.dragging { cursor: grabbing; }
-    .tcard.settle { transition: transform 0.7s var(--spring); }
+    .tcard.settle { transition: transform 0.7s var(--spring), box-shadow 0.7s var(--ease); }
     .tcard.intro { animation: intro 1.1s var(--ease); }
     @keyframes intro {
       0%   { transform: rotateY(-200deg); }
@@ -452,21 +454,27 @@
       border-radius: inherit;
       pointer-events: none;
     }
+    /* glossy sheen: one soft band of light that sweeps across as it turns */
     .tc-holo {
-      background:
-        repeating-linear-gradient(115deg,
-          rgba(85, 173, 255, 0.9) 0%, rgba(245, 195, 255, 0.9) 6%,
-          rgba(255, 255, 255, 0.9) 10%, rgba(85, 173, 255, 0.9) 16%);
-      background-size: 300% 300%;
+      background: linear-gradient(115deg,
+        rgba(255, 255, 255, 0) 36%,
+        rgba(85, 173, 255, 0.45) 44%,
+        rgba(255, 255, 255, 0.95) 50%,
+        rgba(245, 195, 255, 0.5) 56%,
+        rgba(255, 255, 255, 0) 64%);
+      background-size: 260% 260%;
       background-position: var(--mx) var(--my);
-      mix-blend-mode: color-dodge;
-      opacity: var(--holo);
-      transition: opacity 0.3s;
+      mix-blend-mode: screen;
+      opacity: calc(var(--holo) * 0.85);
     }
+    /* soft specular spot where the light hits */
     .tc-glare {
-      background: radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 55%);
-      mix-blend-mode: overlay;
-      opacity: calc(var(--holo) * 1.1);
+      background: radial-gradient(circle at var(--mx) var(--my),
+        rgba(255, 255, 255, 0.6) 0%,
+        rgba(255, 255, 255, 0.15) 28%,
+        rgba(255, 255, 255, 0) 55%);
+      mix-blend-mode: soft-light;
+      opacity: var(--holo);
     }
 
     .viewer-hint {
@@ -702,13 +710,15 @@
         // x, y in -1..1
         card.style.setProperty('--cry', (x * MAX).toFixed(2) + 'deg');
         card.style.setProperty('--crx', (-y * MAX).toFixed(2) + 'deg');
-        card.style.setProperty('--mx', (50 + x * 50).toFixed(1) + '%');
-        card.style.setProperty('--my', (50 + y * 50).toFixed(1) + '%');
+        card.style.setProperty('--mx', (50 + x * 28).toFixed(1) + '%');
+        card.style.setProperty('--my', (50 + y * 28).toFixed(1) + '%');
         card.style.setProperty('--holo', holo.toFixed(2));
+        card.style.setProperty('--sx', (-x * 18).toFixed(1) + 'px');
+        card.style.setProperty('--sy', (24 + y * 12).toFixed(1) + 'px');
       }
       function rest() {
         card.classList.add('settle');
-        setPose(0, 0, 0.25);
+        setPose(0, 0, 0);
         setTimeout(function () { card.classList.remove('settle'); }, 700);
       }
 
@@ -716,7 +726,7 @@
         viewer.classList.add('open');
         viewer.setAttribute('aria-hidden', 'false');
         document.body.classList.add('locked');
-        setPose(0, 0, 0.25);
+        setPose(0, 0, 0);
         if (!REDUCE) {
           card.classList.remove('intro'); void card.offsetWidth; card.classList.add('intro');
         }
@@ -748,12 +758,12 @@
         if (dragging) {
           rx = Math.max(-1, Math.min(1, (e.clientX - sx) / (r.width * 0.6)));
           ry = Math.max(-1, Math.min(1, (e.clientY - sy) / (r.height * 0.6)));
-          setPose(rx, ry, 0.35 + 0.45 * Math.min(1, Math.hypot(rx, ry)));
+          setPose(rx, ry, Math.min(1, Math.hypot(rx, ry) * 1.4));
         } else if (e.pointerType === 'mouse') {
           // desktop: hover to look around
           var x = ((e.clientX - r.left) / r.width - 0.5) * 2;
           var y = ((e.clientY - r.top) / r.height - 0.5) * 2;
-          setPose(x * 0.7, y * 0.7, 0.35 + 0.35 * Math.min(1, Math.hypot(x, y)));
+          setPose(x * 0.7, y * 0.7, Math.min(1, Math.hypot(x, y)));
         }
       });
       function end() {
