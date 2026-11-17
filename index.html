@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>weng.ae</title>
-  <meta name="description" content="weng.ae · Hanasq — MMD clips, methods & links.">
+  <meta name="description" content="weng.ae — Blender MMD Animator & AE Editor.">
   <meta name="theme-color" content="#55adff">
   <meta property="og:title" content="weng.ae">
-  <meta property="og:description" content="MMD clips, methods & links.">
+  <meta property="og:description" content="Blender MMD Animator & AE Editor.">
   <meta property="og:image" content="https://wengae.wordpress.com/wp-content/uploads/2023/08/4096-pfp-original-colored-background-1.png?w=600">
   <link rel="icon" href="https://wengae.wordpress.com/wp-content/uploads/2023/08/4096-pfp-original-colored-background-1.png?w=64">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -126,12 +126,25 @@
       font-weight: 800;
       letter-spacing: 0.02em;
     }
-    .handle {
-      margin-top: 2px;
+    .role {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      background: linear-gradient(90deg, rgba(85, 173, 255, 0.18), rgba(245, 195, 255, 0.35));
       font-size: 13px;
-      font-weight: 700;
-      color: var(--ink-soft);
-      letter-spacing: 0.08em;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      color: var(--ink);
+    }
+    .bio .star {
+      display: inline-block;
+      color: var(--blue);
+      animation: twirl 3.2s ease-in-out infinite;
+    }
+    @keyframes twirl {
+      0%, 100% { transform: rotate(0) scale(1); }
+      50% { transform: rotate(180deg) scale(1.2); }
     }
 
     .divider {
@@ -284,17 +297,13 @@
     </div>
 
     <h1>weng.ae</h1>
-    <p class="handle">WENG · HANASQ</p>
+    <p class="role">Blender MMD Animator &amp; AE Editor</p>
 
     <div class="divider"></div>
 
-    <p class="bio">
-      𝘼 𝙥𝙡𝙚𝙖𝙨𝙪𝙧𝙚 𝙩𝙤 𝙢𝙚𝙚𝙩 𝙮𝙤𝙪.<br>
-      Sincerely, Weng · Hanasq<br>
-      Inquiries • Mail • 中文 / English OK
-    </p>
+    <p class="bio"><span class="star">✦</span> Inquiries 中文 / English OK</p>
     <button class="email" type="button" data-email="weng.ae0@gmail.com" aria-label="複製 email weng.ae0@gmail.com">
-      💌 weng.ae0@gmail.com
+      📩 weng.ae0@gmail.com
     </button>
 
     <ul class="links">
