@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>weng.ae</title>
+  <meta name="description" content="weng.ae · Hanasq — MMD clips, methods & links.">
+  <meta name="theme-color" content="#55adff">
+  <meta property="og:title" content="weng.ae">
+  <meta property="og:description" content="MMD clips, methods & links.">
+  <meta property="og:image" content="https://wengae.wordpress.com/wp-content/uploads/2023/08/4096-pfp-original-colored-background-1.png?w=600">
+  <link rel="icon" href="https://wengae.wordpress.com/wp-content/uploads/2023/08/4096-pfp-original-colored-background-1.png?w=64">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #55adff;
+      --pink: #f5c3ff;
+      --ink: #0f1b33;
+      --ink-soft: #4a5672;
+      --card: rgba(255, 255, 255, 0.78);
+      --radius: 28px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: "Nunito", system-ui, -apple-system, "Segoe UI", "Noto Sans TC", sans-serif;
+      color: var(--ink);
+      background: #fbfaff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 48px 18px;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- animated background ---------- */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.75;
+      will-change: transform;
+    }
+    .blob.b1 { width: 60vmax; height: 60vmax; background: var(--blue); top: -22vmax; left: -18vmax; animation: drift1 18s ease-in-out infinite alternate; }
+    .blob.b2 { width: 55vmax; height: 55vmax; background: var(--pink); bottom: -24vmax; right: -16vmax; animation: drift2 22s ease-in-out infinite alternate; }
+    .blob.b3 { width: 30vmax; height: 30vmax; background: var(--pink); top: 30%; left: 55%; opacity: 0.5; animation: drift3 16s ease-in-out infinite alternate; }
+
+    @keyframes drift1 { to { transform: translate(14vmax, 10vmax) scale(1.08); } }
+    @keyframes drift2 { to { transform: translate(-12vmax, -8vmax) scale(1.12); } }
+    @keyframes drift3 { to { transform: translate(-20vmax, 12vmax) scale(0.9); } }
+
+    .sparkle {
+      position: absolute;
+      color: #fff;
+      font-size: 14px;
+      opacity: 0;
+      animation: twinkle 4s ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: translateY(6px) scale(0.6); }
+      50% { opacity: 0.95; transform: translateY(-6px) scale(1); }
+    }
+
+    /* ---------- card ---------- */
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: var(--radius);
+      padding: 40px 26px 30px;
+      box-shadow: 0 24px 60px -20px rgba(85, 173, 255, 0.45), 0 8px 24px -12px rgba(245, 195, 255, 0.6);
+      text-align: center;
+      transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 112px;
+      height: 112px;
+      margin: 0 auto 18px;
+      animation: float 5s ease-in-out infinite;
+    }
+    .avatar-wrap::before {
+      content: "";
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      background: conic-gradient(var(--blue), var(--pink), var(--blue));
+      animation: spin 6s linear infinite;
+    }
+    .avatar {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      object-fit: cover;
+      background: var(--pink);
+      display: block;
+      color: transparent;
+      font-size: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes float { 50% { transform: translateY(-6px); } }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .handle {
+      margin-top: 2px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      letter-spacing: 0.08em;
+    }
+
+    .divider {
+      width: 44px;
+      height: 4px;
+      border-radius: 4px;
+      margin: 18px auto;
+      background: linear-gradient(90deg, var(--blue), var(--pink));
+    }
+
+    .bio {
+      font-size: 14.5px;
+      line-height: 1.8;
+      color: var(--ink);
+    }
+    .email {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      border: 1.5px dashed var(--pink);
+      background: rgba(245, 195, 255, 0.18);
+      font: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      transition: background 0.25s, transform 0.25s;
+    }
+    .email:hover { background: rgba(245, 195, 255, 0.45); transform: translateY(-1px); }
+    .email:active { transform: scale(0.97); }
+
+    /* ---------- links ---------- */
+    .links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 26px;
+    }
+    .links li {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: rise 0.6s cubic-bezier(.2,.8,.2,1) forwards;
+      animation-delay: calc(0.25s + var(--i) * 0.08s);
+    }
+    @keyframes rise { to { opacity: 1; transform: none; } }
+
+    .btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 2px;
+      min-height: 54px;
+      padding: 12px 22px;
+      border-radius: 100px;
+      border: 2px solid var(--pink);
+      background: #fff;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      overflow: hidden;
+      isolation: isolate;
+      transition: transform 0.3s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s, border-color 0.3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(90deg, var(--blue), var(--pink));
+      transform: translateX(-101%);
+      transition: transform 0.45s cubic-bezier(.2,.8,.2,1);
+    }
+    .btn:hover, .btn:focus-visible {
+      transform: translateY(-3px);
+      border-color: transparent;
+      box-shadow: 0 12px 24px -10px rgba(85, 173, 255, 0.7);
+      outline: none;
+    }
+    .btn:hover::before, .btn:focus-visible::before { transform: none; }
+    .btn:active { transform: translateY(0) scale(0.98); }
+
+    .btn small {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      color: var(--ink-soft);
+    }
+    .btn:hover small, .btn:focus-visible small { color: var(--ink); }
+
+    .btn.primary { background: var(--blue); border-color: var(--blue); }
+    .btn.primary small { color: var(--ink); opacity: 0.75; }
+    .btn.accent { background: var(--pink); border-color: var(--pink); }
+
+    .footer {
+      margin-top: 26px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      letter-spacing: 0.04em;
+    }
+    .footer .heart { display: inline-block; color: var(--blue); animation: beat 1.6s ease-in-out infinite; }
+    @keyframes beat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.25); } 30% { transform: scale(1); } }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translate(-50%, 20px);
+      padding: 10px 18px;
+      border-radius: 100px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .links li { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+
+  <main class="card" id="card">
+    <div class="avatar-wrap">
+      <img class="avatar"
+           src="https://wengae.wordpress.com/wp-content/uploads/2023/08/4096-pfp-original-colored-background-1.png?w=300"
+           alt="weng.ae 頭像" width="112" height="112">
+    </div>
+
+    <h1>weng.ae</h1>
+    <p class="handle">WENG · HANASQ</p>
+
+    <div class="divider"></div>
+
+    <p class="bio">
+      𝘼 𝙥𝙡𝙚𝙖𝙨𝙪𝙧𝙚 𝙩𝙤 𝙢𝙚𝙚𝙩 𝙮𝙤𝙪.<br>
+      Sincerely, Weng · Hanasq<br>
+      Inquiries • Mail • 中文 / English OK
+    </p>
+    <button class="email" type="button" data-email="weng.ae0@gmail.com" aria-label="複製 email weng.ae0@gmail.com">
+      💌 weng.ae0@gmail.com
+    </button>
+
+    <ul class="links">
+      <li style="--i:0"><a class="btn primary" href="https://discord.gg/eZ4nu9p7uf" target="_blank" rel="noopener">My Discord Server<small>MMD method &amp; clips here</small></a></li>
+      <li style="--i:1"><a class="btn" href="https://www.tiktok.com/@weng.ae" target="_blank" rel="noopener">TikTok</a></li>
+      <li style="--i:2"><a class="btn" href="https://www.instagram.com/weng.ae/" target="_blank" rel="noopener">Instagram</a></li>
+      <li style="--i:3"><a class="btn" href="https://www.youtube.com/@weng_ae" target="_blank" rel="noopener">YouTube</a></li>
+      <li style="--i:4"><a class="btn" href="https://www.xiaohongshu.com/user/profile/678a5896000000000a03c1b5?xsec_token=YBOfYJW9eGZq3EeUHEMXmOVinDvXA7-aT3nq_WoQU8aes%3D&amp;xsec_source=app_share&amp;xhsshare=CopyLink&amp;appuid=678a5896000000000a03c1b5&amp;apptime=1737261810&amp;share_id=fcdfd63a57bb416c96ebe9c9e3688378&amp;fbclid=IwY2xjawH5YndleHRuA2FlbQIxMAABHbKSFvpmj3icfEUgRgMRoQpXpdh6coWYeoYbcs4CxeJiqBeHSXmw4d7nAA_aem_VBD0kKJmUGlRMHdP262HaA"target="_blank" rel="noopener">Rednote</a></li>
+      <li style="--i:5"><a class="btn" href="https://www.threads.net/@weng.ae" target="_blank" rel="noopener">Threads</a></li>
+      <li style="--i:6"><a class="btn accent" href="https://payhip.com/b/w0QFc" target="_blank" rel="noopener">My Shop<small>Anime CC + project files (soon)</small></a></li>
+    </ul>
+
+    <p class="footer">Thanks for checking out my bio~ <span class="heart">♡</span></p>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">已複製 email ✦</div>
+
+  <script>
+    // Sparkles
+    (function () {
+      var bg = document.querySelector('.bg');
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return;
+      for (var i = 0; i < 14; i++) {
+        var s = document.createElement('span');
+        s.className = 'sparkle';
+        s.textContent = '✦';
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top = Math.random() * 100 + '%';
+        s.style.fontSize = (10 + Math.random() * 10) + 'px';
+        s.style.animationDelay = (Math.random() * 4) + 's';
+        s.style.animationDuration = (3 + Math.random() * 3) + 's';
+        bg.appendChild(s);
+      }
+    })();
+
+    // Subtle card tilt on pointer move (desktop only)
+    (function () {
+      var card = document.getElementById('card');
+      var fine = window.matchMedia('(pointer: fine)').matches;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!fine || reduce) return;
+      window.addEventListener('pointermove', function (e) {
+        var x = (e.clientX / window.innerWidth - 0.5) * 2;
+        var y = (e.clientY / window.innerHeight - 0.5) * 2;
+        card.style.transform = 'perspective(900px) rotateY(' + (x * 3) + 'deg) rotateX(' + (-y * 3) + 'deg)';
+      });
+      document.addEventListener('pointerleave', function () { card.style.transform = ''; });
+    })();
+
+    // Copy email
+    (function () {
+      var btn = document.querySelector('.email');
+      var toast = document.getElementById('toast');
+      var timer;
+      function show(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(timer);
+        timer = setTimeout(function () { toast.classList.remove('show'); }, 1800);
+      }
+      btn.addEventListener('click', function () {
+        var email = btn.getAttribute('data-email');
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(email).then(function () { show('已複製 email ✦'); },
+            function () { window.location.href = 'mailto:' + email; });
+        } else {
+          window.location.href = 'mailto:' + email;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
