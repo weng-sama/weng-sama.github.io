@@ -1,6 +1,6 @@
 # weng.ae — link in bio
 
-v1.8.0
+v1.8.1
 
 Personal link page for weng.ae (Blender MMD Animator & AE Editor), hosted on GitHub Pages at https://weng-sama.github.io.
 
@@ -10,6 +10,7 @@ Personal link page for weng.ae (Blender MMD Animator & AE Editor), hosted on Git
 
 ## Changelog
 
+- v1.8.1 — Count every page open explicitly (path "/"), also on Back-button return; canonical link; noscript pixel.
 - v1.8.0 — Visitor stats via GoatCounter (weng-sama.goatcounter.com): page views, link taps, avatar open, name/email copy; cookieless.
 - v1.7.2 — New reflection on avatar preview: single soft glossy light band + specular spot that sweep as it turns, shadow shifts with angle; no reflection at rest.
 - v1.7.1 — Profile preview is now just the round avatar (holo shine, drag to turn), no trading card.

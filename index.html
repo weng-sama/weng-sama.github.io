@@ -6,6 +6,7 @@
   <title>weng.ae</title>
   <meta name="description" content="weng.ae — Blender MMD Animator & AE Editor.">
   <meta name="theme-color" content="#55adff">
+  <link rel="canonical" href="https://weng-sama.github.io/">
   <meta property="og:title" content="weng.ae">
   <meta property="og:description" content="Blender MMD Animator & AE Editor.">
   <meta property="og:image" content="https://wengae.wordpress.com/wp-content/uploads/2023/08/4096-pfp-original-colored-background-1.png?w=600">
@@ -778,6 +779,39 @@
     })();
   </script>
   <!-- Visitor stats (GoatCounter: cookieless, no personal data) -->
+  <script>
+    // Count every page open ourselves (path "/" so ?v=... etc. are merged),
+    // and count again when someone comes back with the Back button (page restored from cache).
+    window.goatcounter = { no_onload: true };
+    (function () {
+      var bound = false;
+      function view() {
+        if (window.goatcounter && typeof window.goatcounter.count === 'function') {
+          window.goatcounter.count({ path: '/', title: 'weng.ae — page view' });
+          if (!bound && typeof window.goatcounter.bind_events === 'function') { window.goatcounter.bind_events(); bound = true; }
+          return true;
+        }
+        return false;
+      }
+      function whenReady() {
+        if (view()) return;
+        var tries = 0, iv = setInterval(function () {
+          if (view() || ++tries > 50) clearInterval(iv);
+        }, 200);
+      }
+      if (document.visibilityState === 'prerender') {
+        document.addEventListener('visibilitychange', function f() {
+          if (document.visibilityState !== 'visible') return;
+          document.removeEventListener('visibilitychange', f);
+          whenReady();
+        });
+      } else {
+        whenReady();
+      }
+      window.addEventListener('pageshow', function (e) { if (e.persisted) view(); });
+    })();
+  </script>
   <script data-goatcounter="https://weng-sama.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+  <noscript><img src="https://weng-sama.goatcounter.com/count?p=/" alt="" width="1" height="1"></noscript>
 </body>
 </html>
